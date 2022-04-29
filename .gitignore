@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022-present Intel Corporation
+# SPDX-FileCopyrightText: 2019-present Open Networking Foundation <info@opennetworking.org>
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -13,3 +18,5 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+build/
+.idea/
