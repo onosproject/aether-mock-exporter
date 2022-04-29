@@ -15,7 +15,7 @@ KIND_CLUSTER_NAME           ?= kind
 DOCKER_REPOSITORY           ?= onosproject/
 ONOS_SDCORE_ADAPTER_VERSION ?= latest
 
-build-tools:=$(shell if [ ! -d "./build/build-tools" ]; then mkdir build && cd build && git clone https://github.com/onosproject/build-tools.git; fi)
+build-tools:=$(shell if [ ! -d "./build/build-tools" ]; then cd build && git clone https://github.com/onosproject/build-tools.git; fi)
 include ./build/build-tools/make/onf-common.mk
 
 all: build images
