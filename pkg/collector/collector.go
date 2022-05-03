@@ -71,7 +71,7 @@ func RecordMetrics(period time.Duration, vcdID string) {
 }
 
 // RecordUEMetrics reports UE-based metrics
-func RecordUEMetrics(period time.Duration, vcsID string, imsiList []string, upThroughput float64, downThroughput float64, upLatency float64, downLatency float64) {
+func RecordUEMetrics(period time.Duration, sliceID string, imsiList []string, upThroughput float64, downThroughput float64, upLatency float64, downLatency float64) {
 	go func() {
 		states := []string{"active", "inactive", "idle"}
 		for {
@@ -105,9 +105,9 @@ func RecordUEMetrics(period time.Duration, vcsID string, imsiList []string, upTh
 				counts[stateIndex]++
 				for j, state := range states {
 					if j == stateIndex {
-						smfPduSessionProfile.WithLabelValues(imsi, ip, state, "upf", vcsID).Set(1)
+						smfPduSessionProfile.WithLabelValues(imsi, ip, state, "upf", sliceID).Set(1)
 					} else {
-						smfPduSessionProfile.WithLabelValues(imsi, ip, state, "upf", vcsID).Set(0)
+						smfPduSessionProfile.WithLabelValues(imsi, ip, state, "upf", sliceID).Set(0)
 
 					}
 				}
@@ -116,39 +116,39 @@ func RecordUEMetrics(period time.Duration, vcsID string, imsiList []string, upTh
 					// active UE reports throughput and latency
 					if PercentUpThroughput == nil {
 						// randomize, between 75% and 100% of upThroughput argument
-						ueThroughput.WithLabelValues(imsi, vcsID, "upstream").Set(upThroughput * float64(75+rand.Intn(25)) / 100.0)
+						ueThroughput.WithLabelValues(imsi, sliceID, "upstream").Set(upThroughput * float64(75+rand.Intn(25)) / 100.0)
 					} else {
 						// Someone turned the knob in the mock-sdcore-exporter control ui.
-						ueThroughput.WithLabelValues(imsi, vcsID, "upstream").Set(upThroughput * (*PercentUpThroughput))
+						ueThroughput.WithLabelValues(imsi, sliceID, "upstream").Set(upThroughput * (*PercentUpThroughput))
 					}
 					if PercentDownThroughput == nil {
 						// randomize, between 75% and 100% of downThroughput argument
-						ueThroughput.WithLabelValues(imsi, vcsID, "downstream").Set(downThroughput * float64(75+rand.Intn(25)) / 100.0)
+						ueThroughput.WithLabelValues(imsi, sliceID, "downstream").Set(downThroughput * float64(75+rand.Intn(25)) / 100.0)
 					} else {
 						// Someone turned the knob in the mock-sdcore-exporter control ui.
-						ueThroughput.WithLabelValues(imsi, vcsID, "downstream").Set(downThroughput * (*PercentDownThroughput))
+						ueThroughput.WithLabelValues(imsi, sliceID, "downstream").Set(downThroughput * (*PercentDownThroughput))
 					}
 					if PercentUpLatency == nil {
 						// randomize, between 75% and 100% of latency argument
-						ueLatency.WithLabelValues(imsi, vcsID, "upstream").Set(upLatency * float64(75+rand.Intn(25)) / 100.0)
+						ueLatency.WithLabelValues(imsi, sliceID, "upstream").Set(upLatency * float64(75+rand.Intn(25)) / 100.0)
 					} else {
 						// Someone turned the knob in the mock-sdcore-exporter control ui.
-						ueLatency.WithLabelValues(imsi, vcsID, "upstream").Set(upLatency * (*PercentUpLatency))
+						ueLatency.WithLabelValues(imsi, sliceID, "upstream").Set(upLatency * (*PercentUpLatency))
 					}
 					if PercentDownLatency == nil {
 						// randomize, between 75% and 100% of latency argument
-						ueLatency.WithLabelValues(imsi, vcsID, "downstream").Set(downLatency * float64(75+rand.Intn(25)) / 100.0)
+						ueLatency.WithLabelValues(imsi, sliceID, "downstream").Set(downLatency * float64(75+rand.Intn(25)) / 100.0)
 					} else {
 						// Someone turned the knob in the mock-sdcore-exporter control ui.
-						ueLatency.WithLabelValues(imsi, vcsID, "downstream").Set(downLatency * (*PercentDownLatency))
+						ueLatency.WithLabelValues(imsi, sliceID, "downstream").Set(downLatency * (*PercentDownLatency))
 					}
 					ueSubscriberInfo.WithLabelValues(imsi, ip).Set(1)
 				} else {
 					// inactive UE has no throughput or latency
-					ueThroughput.WithLabelValues(imsi, vcsID, "upstream").Set(0)
-					ueThroughput.WithLabelValues(imsi, vcsID, "downstream").Set(0)
-					ueLatency.WithLabelValues(imsi, vcsID, "upstream").Set(0)
-					ueLatency.WithLabelValues(imsi, vcsID, "downstream").Set(0)
+					ueThroughput.WithLabelValues(imsi, sliceID, "upstream").Set(0)
+					ueThroughput.WithLabelValues(imsi, sliceID, "downstream").Set(0)
+					ueLatency.WithLabelValues(imsi, sliceID, "upstream").Set(0)
+					ueLatency.WithLabelValues(imsi, sliceID, "downstream").Set(0)
 					ueSubscriberInfo.WithLabelValues(imsi, ip).Set(0)
 				}
 			}
@@ -202,9 +202,9 @@ var (
 
 	// UE throughput and latencies are hypothetical per-UE values
 	ueSubscriberInfo = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "subscriber_info",
-		Help: "subscriber info",
-	}, []string{"imsi", "ip"})
+		Name: "subscribers_info",
+		Help: "subscribers info",
+	}, []string{"imsi", "mobile_ip"})
 	ueThroughput = promauto.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "ue_throughput",
 		Help: "ue_throughput",

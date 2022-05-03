@@ -10,7 +10,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -83,12 +82,10 @@ func main() {
 		"12",
 	}, 100000, 1000, 10, 10)
 
-	var imsi uint64
-	gameImsis := []string{}
-	for imsi = 130029313275060; imsi <= 130029313275160; imsi++ {
-		gameImsis = append(gameImsis, strconv.FormatUint(imsi, 10))
-	}
-	collector.RecordUEMetrics(2*time.Second, "zynga-sfo-vrgames", gameImsis, 1000, 100000, 10, 10)
+	collector.RecordUEMetrics(2*time.Second, "test-slice", []string{
+		"208010167891201",
+		"208010167891202",
+	}, 100000, 1000, 10, 10)
 
 	collector.StartExporterAPI()
 
