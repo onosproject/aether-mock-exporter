@@ -13,62 +13,19 @@ env:
   ONOS_SDCORE_ADAPTER_VERSION: latest
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: 'go.mod'
-      - name: Build
-        run: go build -o build/_output/aether-mock-exporter ./cmd/aether-mock-exporter
+  build-and-test:
+    uses: onosproject/.github/.github/workflows/go-build-test.yml@main
 
   lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: 'go.mod'
-      - uses: golangci/golangci-lint-action@v4.0.0
-        with:
-          version: latest
-          args: -v --config ./.golangci.yml --timeout=15m
-
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: 'go.mod'
-      - name: Unit tests
-        run: |
-          go test -cover -race github.com/onosproject/aether-mock-exporter/pkg/...
-          go test -cover -race github.com/onosproject/aether-mock-exporter/cmd/...
+    uses: onosproject/.github/.github/workflows/go-lint.yml@main
 
   docker-build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: 'go.mod'
-      - name: Build Docker image
-        run: docker build . -f Dockerfile -t ${DOCKER_REPOSITORY}aether-mock-exporter:${ONOS_SDCORE_ADAPTER_VERSION}
+    uses: onosproject/.github/.github/workflows/docker-build.yml@main
+    with:
+      make_target: aether-mock-exporter-docker
 
   license-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: reuse lint
-        uses: fsfe/reuse-action@v3
+    uses: onosproject/.github/.github/workflows/license-check.yml@main
 
   fossa-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: FOSSA scan
-        uses: fossa-contrib/fossa-action@v3
-        with:
-          fossa-api-key: 6d304c09a3ec097ba4517724e4a4d17d
+    uses: onosproject/.github/.github/workflows/fossa-scan.yml@main
