@@ -7,9 +7,10 @@ package collector
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 // Give mock-sdcore-exporter some knobs that can be manually turned.
