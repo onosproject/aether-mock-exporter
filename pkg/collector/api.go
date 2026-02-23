@@ -46,7 +46,7 @@ type ExporterAPI struct {
 // easy enough to put the page contents inline and simplify distribution. If the page
 // becomes more complex, then consider putting it in a separate file.
 func (m *ExporterAPI) index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, `
+	_, _ = fmt.Fprintf(w, `
 	<!DOCTYPE html>
 	<html lang="en">
 	
