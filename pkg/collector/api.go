@@ -7,9 +7,10 @@ package collector
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 // Give mock-sdcore-exporter some knobs that can be manually turned.
@@ -46,7 +47,7 @@ type ExporterAPI struct {
 // easy enough to put the page contents inline and simplify distribution. If the page
 // becomes more complex, then consider putting it in a separate file.
 func (m *ExporterAPI) index(w http.ResponseWriter, r *http.Request) {
-	_, _ = fmt.Fprintf(w, `
+	fmt.Fprintf(w, `
 	<!DOCTYPE html>
 	<html lang="en">
 	
